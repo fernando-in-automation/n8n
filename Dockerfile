@@ -1,9 +1,16 @@
-FROM n8nio/base:22
+# Usa a imagem oficial do n8n
+FROM n8nio/n8n
 
-RUN apk add --no-cache --update openssh sudo shadow bash
-RUN echo node ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/node && chmod 0440 /etc/sudoers.d/node
-RUN mkdir /workspaces && chown node:node /workspaces
-RUN npm install -g pnpm
+# Define variáveis de ambiente (você pode mudar usuário e senha)
+ENV N8N_BASIC_AUTH_ACTIVE=true
+ENV N8N_BASIC_AUTH_USER=admin
+ENV N8N_BASIC_AUTH_PASSWORD=senha123
+ENV N8N_HOST=0.0.0.0
+ENV N8N_PORT=5678
+ENV NODE_ENV=production
 
-USER node
-RUN mkdir -p ~/.pnpm-store && pnpm config set store-dir ~/.pnpm-store --global
+# Expõe a porta que o n8n usa
+EXPOSE 5678
+
+# Comando para iniciar o n8n
+CMD ["n8n", "start"]
